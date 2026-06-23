@@ -1,46 +1,61 @@
-/* Mobile responsive utilities */
-@media (max-width: 767px) {
+@import "tailwindcss";
 
-  /* Tables scroll horizontally on mobile */
-  table {
-    font-size: 12px !important;
-  }
-
-  /* Stack grids on mobile */
-  .mobile-stack {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Full width buttons on mobile */
-  .mobile-full {
-    width: 100% !important;
-  }
+@theme {
+  --color-primary: #1e40af;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #3b82f6;
+  --color-accent: #f59e0b;
+  --color-accent-dark: #d97706;
+  --color-sidebar-bg: #ffffff;
+  --color-sidebar-text: #374151;
+  --font-sans: 'Inter', sans-serif;
 }
 
-/* Smooth scroll */
 * {
-  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Better touch targets */
-button, a {
-  min-height: 36px;
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f1f5f9;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, select, textarea, button {
+  font-family: 'Inter', sans-serif;
 }
 
 /* Sidebar nav scrollbar */
 #sidebar-nav::-webkit-scrollbar {
   width: 4px;
 }
-
 #sidebar-nav::-webkit-scrollbar-track {
   background: transparent;
 }
-
 #sidebar-nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: #e5e7eb;
   border-radius: 4px;
 }
-
 #sidebar-nav::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: #d1d5db;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 767px) {
+  table { font-size: 12px !important; }
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+button, a { min-height: 36px; }
+
+@media print {
+  aside, header, button, a[href], form { display: none !important; }
+  main { margin-left: 0 !important; padding: 0 !important; }
+  body { background: white !important; font-size: 12px; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
 }

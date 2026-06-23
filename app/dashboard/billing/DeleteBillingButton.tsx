@@ -20,32 +20,28 @@ export default function DeleteBillingButton({ id }: { id: string }) {
 
   if (confirm) {
     return (
-      <div style={{ display: 'flex', gap: '6px' }}>
+      <div style={{ display: 'flex', gap: '5px' }}>
         <button
           onClick={handleDelete}
           disabled={loading}
           style={{
             padding: '4px 10px',
-            background: '#dc2626',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: '11px',
-            cursor: 'pointer',
+            background: '#ef4444', color: '#fff',
+            border: 'none', borderRadius: '6px',
+            fontSize: '11px', fontWeight: 700,
+            cursor: 'pointer', fontFamily: 'inherit',
           }}
         >
-          {loading ? '...' : 'Confirm'}
+          {loading ? '...' : 'Yes'}
         </button>
         <button
           onClick={() => setConfirm(false)}
           style={{
             padding: '4px 10px',
-            background: '#f3f4f6',
-            color: '#374151',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: '11px',
-            cursor: 'pointer',
+            background: '#f3f4f6', color: '#374151',
+            border: 'none', borderRadius: '6px',
+            fontSize: '11px', fontWeight: 600,
+            cursor: 'pointer', fontFamily: 'inherit',
           }}
         >
           No
@@ -59,12 +55,11 @@ export default function DeleteBillingButton({ id }: { id: string }) {
       onClick={() => setConfirm(true)}
       style={{
         padding: '4px 10px',
-        background: '#fef2f2',
-        color: '#dc2626',
-        border: 'none',
-        borderRadius: '5px',
-        fontSize: '11px',
-        cursor: 'pointer',
+        background: '#fee2e2', color: '#dc2626',
+        border: '1px solid #fecaca',
+        borderRadius: '6px', fontSize: '11px',
+        fontWeight: 700, cursor: 'pointer',
+        fontFamily: 'inherit',
       }}
     >
       Delete

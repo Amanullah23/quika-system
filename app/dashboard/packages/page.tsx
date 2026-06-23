@@ -27,9 +27,7 @@ export default function PackagesPage() {
     }
   }
 
-  useEffect(() => {
-    loadPackages()
-  }, [])
+  useEffect(() => { loadPackages() }, [])
 
   async function handleDelete(id: string) {
     try {
@@ -59,221 +57,315 @@ export default function PackagesPage() {
     loadPackages()
   }
 
+  const active = packages.filter(p => p.is_active).length
+  const inactive = packages.filter(p => !p.is_active).length
+
+  const packageColors = [
+    { bg: '#eff6ff', border: '#bfdbfe', icon: '#1e40af', badge: '#dbeafe' },
+    { bg: '#f0fdf4', border: '#bbf7d0', icon: '#059669', badge: '#d1fae5' },
+    { bg: '#faf5ff', border: '#e9d5ff', icon: '#7c3aed', badge: '#ede9fe' },
+    { bg: '#fff7ed', border: '#fed7aa', icon: '#d97706', badge: '#fef3c7' },
+    { bg: '#fdf2f8', border: '#f9a8d4', icon: '#db2777', badge: '#fce7f3' },
+  ]
+
   return (
-    <div>
+    <div style={{ maxWidth: '1200px' }}>
+      <style>{`
+        .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .pkg-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .pkg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        @media (max-width: 767px) {
+          .pkg-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .pkg-stat-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+          .pkg-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+          .pkg-header button { width: 100% !important; }
+        }
+      `}</style>
+
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: '24px',
-      }}>
+      <div className="pkg-header">
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#111827', letterSpacing: '-0.3px' }}>
             Packages
           </h2>
-          <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '2px' }}>
+          <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px', fontWeight: 500 }}>
             Internet packages offered to customers
           </p>
         </div>
         <button
           onClick={openAdd}
           style={{
-            background: '#0c7177',
-            color: '#ffffff',
-            padding: '10px 20px',
-            borderRadius: '8px',
-            border: 'none',
-            fontSize: '14px',
-            fontWeight: 600,
-            cursor: 'pointer',
+            background: 'linear-gradient(135deg, #1e40af, #3b82f6)',
+            color: '#fff', padding: '10px 20px',
+            borderRadius: '10px', border: 'none',
+            fontSize: '13px', fontWeight: 700,
+            cursor: 'pointer', fontFamily: 'inherit',
+            display: 'flex', alignItems: 'center', gap: '6px',
+            boxShadow: '0 2px 8px rgba(30,64,175,0.25)',
           }}
         >
           + Add Package
         </button>
       </div>
 
+      {/* Stat cards */}
+      <div className="pkg-stat-grid" style={{ marginBottom: '20px' }}>
+        {[
+          { label: 'Total Packages', value: packages.length, icon: '📦', iconBg: '#e0f2fe', border: '#0ea5e9' },
+          { label: 'Active', value: active, icon: '✅', iconBg: '#d1fae5', border: '#10b981' },
+          { label: 'Inactive', value: inactive, icon: '⏸️', iconBg: '#f3f4f6', border: '#9ca3af' },
+        ].map(card => (
+          <div key={card.label} style={{
+            background: '#fff', borderRadius: '12px',
+            padding: '16px 18px',
+            border: '1px solid #f3f4f6',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+            display: 'flex', alignItems: 'center', gap: '12px',
+            borderLeft: `3px solid ${card.border}`,
+          }}>
+            <div style={{
+              width: '40px', height: '40px',
+              background: card.iconBg, borderRadius: '10px',
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'center', fontSize: '18px', flexShrink: 0,
+            }}>
+              {card.icon}
+            </div>
+            <div>
+              <div style={{ fontSize: '10px', color: '#6b7280', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>
+                {card.label}
+              </div>
+              <div style={{ fontSize: '22px', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>
+                {card.value}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Error */}
       {error && (
         <div style={{
-          background: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: '8px',
-          padding: '12px 16px',
-          color: '#dc2626',
-          fontSize: '14px',
-          marginBottom: '16px',
+          background: '#fef2f2', border: '1px solid #fecaca',
+          borderRadius: '10px', padding: '12px 16px',
+          color: '#dc2626', fontSize: '13px', marginBottom: '16px',
+          display: 'flex', alignItems: 'center', gap: '8px',
         }}>
-          {error}
+          ⚠️ {error}
         </div>
       )}
 
-      {/* Packages Grid */}
+      {/* Loading */}
       {loading ? (
         <div style={{
-          background: '#ffffff',
-          borderRadius: '12px',
-          padding: '48px',
-          textAlign: 'center',
-          color: '#9ca3af',
-          fontSize: '14px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          background: '#fff', borderRadius: '14px',
+          padding: '60px', textAlign: 'center',
+          color: '#9ca3af', fontSize: '13px',
+          border: '1px solid #f3f4f6',
         }}>
+          <div style={{ fontSize: '32px', marginBottom: '10px' }}>📦</div>
           Loading packages...
         </div>
       ) : packages.length === 0 ? (
         <div style={{
-          background: '#ffffff',
-          borderRadius: '12px',
-          padding: '48px',
-          textAlign: 'center',
-          color: '#9ca3af',
-          fontSize: '14px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          background: '#fff', borderRadius: '14px',
+          padding: '60px', textAlign: 'center',
+          border: '1px solid #f3f4f6',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
         }}>
-          No packages yet. Add your first package.
+          <div style={{ fontSize: '48px', marginBottom: '14px' }}>📦</div>
+          <div style={{ fontSize: '15px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+            No packages yet
+          </div>
+          <div style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '20px' }}>
+            Add your first internet package to get started
+          </div>
+          <button
+            onClick={openAdd}
+            style={{
+              padding: '10px 24px',
+              background: 'linear-gradient(135deg, #1e40af, #3b82f6)',
+              color: '#fff', border: 'none', borderRadius: '9px',
+              fontSize: '13px', fontWeight: 700,
+              cursor: 'pointer', fontFamily: 'inherit',
+            }}
+          >
+            + Add First Package
+          </button>
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: '16px',
-        }}>
-          {packages.map(pkg => (
-            <div key={pkg.id} style={{
-              background: '#ffffff',
-              borderRadius: '12px',
-              padding: '24px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-              border: pkg.is_active ? '1px solid #e5e7eb' : '1px solid #f3f4f6',
-              opacity: pkg.is_active ? 1 : 0.65,
-              position: 'relative',
-            }}>
-              {/* Status badge */}
-              <div style={{
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-                background: pkg.is_active ? '#dcfce7' : '#f3f4f6',
-                color: pkg.is_active ? '#166534' : '#6b7280',
-                padding: '2px 8px',
-                borderRadius: '20px',
-                fontSize: '11px',
-                fontWeight: 600,
+        <div className="pkg-grid">
+          {packages.map((pkg, i) => {
+            const colors = packageColors[i % packageColors.length]
+            return (
+              <div key={pkg.id} style={{
+                background: '#fff',
+                borderRadius: '14px',
+                border: `1px solid ${pkg.is_active ? colors.border : '#e5e7eb'}`,
+                boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+                overflow: 'hidden',
+                opacity: pkg.is_active ? 1 : 0.6,
+                transition: 'transform 0.15s, box-shadow 0.15s',
               }}>
-                {pkg.is_active ? 'Active' : 'Inactive'}
-              </div>
+                {/* Card top accent */}
+                <div style={{
+                  height: '4px',
+                  background: pkg.is_active
+                    ? `linear-gradient(90deg, ${colors.icon}, ${colors.icon}88)`
+                    : '#e5e7eb',
+                }} />
 
-              {/* Speed badge */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#f0fafa',
-                color: '#0c7177',
-                borderRadius: '10px',
-                padding: '8px 16px',
-                fontSize: '22px',
-                fontWeight: 800,
-                marginBottom: '12px',
-                letterSpacing: '-0.5px',
-              }}>
-                {pkg.mbps}
-              </div>
-
-              <div style={{ fontSize: '16px', fontWeight: 700, color: '#111827', marginBottom: '4px' }}>
-                {pkg.name}
-              </div>
-
-              {pkg.description && (
-                <div style={{ fontSize: '13px', color: '#6b7280', marginBottom: '12px' }}>
-                  {pkg.description}
-                </div>
-              )}
-
-              <div style={{
-                fontSize: '20px',
-                fontWeight: 800,
-                color: '#0c7177',
-                marginBottom: '16px',
-              }}>
-                AFN {Number(pkg.price_afn).toLocaleString()}
-                <span style={{ fontSize: '12px', fontWeight: 400, color: '#9ca3af', marginLeft: '4px' }}>
-                  / month
-                </span>
-              </div>
-
-              {/* Actions */}
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => openEdit(pkg)}
-                  style={{
-                    flex: 1,
-                    padding: '8px',
-                    background: '#f3f4f6',
-                    color: '#374151',
-                    border: 'none',
-                    borderRadius: '7px',
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Edit
-                </button>
-
-                {deleteConfirm === pkg.id ? (
-                  <div style={{ display: 'flex', gap: '6px', flex: 1 }}>
-                    <button
-                      onClick={() => handleDelete(pkg.id)}
-                      style={{
-                        flex: 1,
-                        padding: '8px',
-                        background: '#dc2626',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '7px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      onClick={() => setDeleteConfirm(null)}
-                      style={{
-                        flex: 1,
-                        padding: '8px',
-                        background: '#f3f4f6',
-                        color: '#374151',
-                        border: 'none',
-                        borderRadius: '7px',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setDeleteConfirm(pkg.id)}
-                    style={{
+                <div style={{ padding: '20px' }}>
+                  {/* Header row */}
+                  <div style={{
+                    display: 'flex', alignItems: 'flex-start',
+                    justifyContent: 'space-between', marginBottom: '16px',
+                  }}>
+                    {/* Speed badge */}
+                    <div style={{
+                      background: pkg.is_active ? colors.bg : '#f9fafb',
+                      border: `1px solid ${pkg.is_active ? colors.border : '#e5e7eb'}`,
+                      borderRadius: '10px',
                       padding: '8px 14px',
-                      background: '#fef2f2',
-                      color: '#dc2626',
-                      border: 'none',
-                      borderRadius: '7px',
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Delete
-                  </button>
-                )}
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    }}>
+                      <span style={{ fontSize: '16px' }}>📡</span>
+                      <span style={{
+                        fontSize: '20px', fontWeight: 800,
+                        color: pkg.is_active ? colors.icon : '#9ca3af',
+                        letterSpacing: '-0.5px',
+                      }}>
+                        {pkg.mbps}
+                      </span>
+                      <span style={{
+                        fontSize: '10px', fontWeight: 600,
+                        color: pkg.is_active ? colors.icon : '#9ca3af',
+                        opacity: 0.7,
+                      }}>
+                        Mbps
+                      </span>
+                    </div>
+
+                    {/* Status badge */}
+                    <span style={{
+                      background: pkg.is_active ? '#dcfce7' : '#f3f4f6',
+                      color: pkg.is_active ? '#166534' : '#6b7280',
+                      padding: '3px 9px', borderRadius: '20px',
+                      fontSize: '10px', fontWeight: 700,
+                      border: pkg.is_active ? '1px solid #bbf7d0' : '1px solid #e5e7eb',
+                    }}>
+                      {pkg.is_active ? '● Active' : '○ Inactive'}
+                    </span>
+                  </div>
+
+                  {/* Package name */}
+                  <div style={{
+                    fontSize: '15px', fontWeight: 700,
+                    color: '#111827', marginBottom: '4px',
+                  }}>
+                    {pkg.name}
+                  </div>
+
+                  {/* Description */}
+                  {pkg.description && (
+                    <div style={{
+                      fontSize: '12px', color: '#6b7280',
+                      marginBottom: '14px', fontWeight: 400,
+                      lineHeight: 1.5,
+                    }}>
+                      {pkg.description}
+                    </div>
+                  )}
+
+                  {/* Price */}
+                  <div style={{
+                    background: pkg.is_active ? colors.bg : '#f9fafb',
+                    borderRadius: '9px', padding: '12px 14px',
+                    marginBottom: '16px',
+                    border: `1px solid ${pkg.is_active ? colors.border : '#e5e7eb'}`,
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                    <div>
+                      <div style={{ fontSize: '9px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>
+                        Monthly Price
+                      </div>
+                      <div style={{
+                        fontSize: '20px', fontWeight: 800,
+                        color: pkg.is_active ? colors.icon : '#9ca3af',
+                        letterSpacing: '-0.5px',
+                      }}>
+                        AFN {Number(pkg.price_afn).toLocaleString()}
+                      </div>
+                    </div>
+                    <div style={{
+                      fontSize: '12px', color: '#9ca3af', fontWeight: 500,
+                    }}>
+                      / month
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => openEdit(pkg)}
+                      style={{
+                        flex: 1, padding: '9px',
+                        background: '#f9fafb', color: '#374151',
+                        border: '1.5px solid #e5e7eb', borderRadius: '8px',
+                        fontSize: '12px', fontWeight: 600,
+                        cursor: 'pointer', fontFamily: 'inherit',
+                      }}
+                    >
+                      ✏️ Edit
+                    </button>
+
+                    {deleteConfirm === pkg.id ? (
+                      <div style={{ display: 'flex', gap: '6px', flex: 1 }}>
+                        <button
+                          onClick={() => handleDelete(pkg.id)}
+                          style={{
+                            flex: 1, padding: '9px',
+                            background: '#ef4444', color: '#fff',
+                            border: 'none', borderRadius: '8px',
+                            fontSize: '12px', fontWeight: 700,
+                            cursor: 'pointer', fontFamily: 'inherit',
+                          }}
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirm(null)}
+                          style={{
+                            flex: 1, padding: '9px',
+                            background: '#f3f4f6', color: '#374151',
+                            border: 'none', borderRadius: '8px',
+                            fontSize: '12px', cursor: 'pointer',
+                            fontFamily: 'inherit',
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeleteConfirm(pkg.id)}
+                        style={{
+                          padding: '9px 14px',
+                          background: '#fee2e2', color: '#dc2626',
+                          border: '1px solid #fecaca', borderRadius: '8px',
+                          fontSize: '12px', fontWeight: 700,
+                          cursor: 'pointer', fontFamily: 'inherit',
+                        }}
+                      >
+                        🗑
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
