@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '../../lib/supabase/client'
 import { RoleProvider, useRole } from '../../lib/roleContext'
+import GlobalSearch from './GlobalSearch'
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '📊', color: '#6366f1', roles: ['admin', 'finance', 'viewer'] },
@@ -443,16 +444,9 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {/* Search bar — desktop only */}
+            {/* Global search — desktop only */}
             {!isMobile && (
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                background: '#f9fafb', border: '1px solid #e5e7eb',
-                borderRadius: '8px', padding: '6px 12px',
-                fontSize: '13px', color: '#9ca3af',
-              }}>
-                🔍
-                <span>Search...</span>
-              </div>
+              <GlobalSearch />
             )}
 
             {/* Role badge */}
