@@ -523,7 +523,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
               <Link key={item.href} href={item.href} style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
-                padding: '8px 2px', textDecoration: 'none',
+                padding: '7px 2px', textDecoration: 'none',
                 color: isActive ? '#1e40af' : '#9ca3af',
                 borderTop: isActive ? '2px solid #1e40af' : '2px solid transparent',
                 background: isActive ? '#eff6ff' : 'transparent',
@@ -536,11 +536,13 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
               </Link>
             )
           })}
+
+          {/* More button — opens sidebar */}
           {visibleNav.length > 5 && (
             <button onClick={() => setMobileSidebarOpen(true)} style={{
               flex: 1, display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center',
-              padding: '8px 2px', background: 'transparent',
+              padding: '7px 2px', background: 'transparent',
               border: 'none', color: '#9ca3af',
               cursor: 'pointer', gap: '3px',
               borderTop: '2px solid transparent',
@@ -549,6 +551,21 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
               <span style={{ fontSize: '9px' }}>More</span>
             </button>
           )}
+
+          {/* Logout button — always visible on mobile */}
+          <button
+            onClick={handleLogout}
+            style={{
+              flex: 1, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              padding: '7px 2px', background: 'transparent',
+              border: 'none', borderTop: '2px solid transparent',
+              color: '#ef4444', cursor: 'pointer', gap: '3px',
+            }}
+          >
+            <span style={{ fontSize: '18px' }}>🚪</span>
+            <span style={{ fontSize: '9px', fontWeight: 500 }}>Logout</span>
+          </button>
         </nav>
       )}
     </div>
